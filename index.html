@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1e3d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="주가계산기">
+<title>주가 계산기</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef1f6;--card:#fff;--ink:#0f1e3d;--sub:#6a7488;--line:#e3e7ee;--up:#e5383b;--down:#2563eb;--bar:#d9e2f3;--brown:#7a3b12;--hero:#0f1e3d;--heroink:#fff;--chip:rgba(255,255,255,.14);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0e15;--card:#151a24;--ink:#eef1f7;--sub:#8f99ad;--line:#262d3c;--up:#ff6b6b;--down:#6ea2ff;--bar:#22314f;--brown:#d9a066;--hero:#1b2a4d;--chip:rgba(255,255,255,.1)}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;line-height:1.45;-webkit-tap-highlight-color:transparent}
+main{max-width:520px;margin:0 auto;padding:0 14px 40px}
+.hero{background:var(--hero);color:var(--heroink);margin:0 -14px 14px;padding:22px 20px 24px;border-radius:0 0 26px 26px}
+.hero small{opacity:.7;font-size:13px}
+.hero .big{font-size:38px;font-weight:900;letter-spacing:-.5px;font-variant-numeric:tabular-nums;margin:2px 0 12px}
+.hero .big span{font-size:18px;font-weight:500;margin-left:3px;opacity:.8}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:19px;margin-bottom:16px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--chip);border-radius:999px;padding:5px 12px;font-size:13px}
+.chip b{font-variant-numeric:tabular-nums;font-size:15px;margin-left:4px}
+.card{background:var(--card);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(15,30,61,.06)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+label{display:block;font-size:12px;color:var(--sub);margin-bottom:3px}
+input{width:100%;font:inherit;font-size:17px;font-weight:500;font-variant-numeric:tabular-nums;padding:10px 12px;border:1.5px solid transparent;border-radius:12px;background:var(--bg);color:var(--ink)}
+input:focus{outline:none;border-color:var(--down)}
+h2{font-size:15px;margin:0 0 6px;font-weight:700}
+ul{list-style:none;margin:0;padding:0}
+.r{position:relative;display:grid;grid-template-columns:30px 1fr auto 70px;align-items:center;gap:6px;padding:12px 2px 14px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.r .no{width:24px;height:24px;border-radius:50%;background:var(--bg);color:var(--sub);font-size:12px;display:grid;place-items:center}
+.r .per{color:var(--sub);font-size:15px}
+.r .pr{font-weight:700;font-size:19px;text-align:right}
+.r .df{text-align:right;font-size:14px;font-weight:500}
+.bar{position:absolute;left:0;bottom:5px;height:3px;border-radius:2px;background:var(--bar)}
+.mark{display:flex;align-items:center;gap:8px;margin:4px 0;padding:6px 10px;border-radius:10px;background:var(--hero);color:var(--heroink);font-size:13px;font-variant-numeric:tabular-nums}
+.mark b{margin-left:auto;font-size:15px}
+.up{color:var(--up)}.down{color:var(--down)}
+button{width:100%;margin-top:14px;padding:14px;font:inherit;font-size:17px;font-weight:700;color:#fff;background:var(--down);border:0;border-radius:14px;cursor:pointer}button:active{transform:scale(.98)}button:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+select{width:100%;font:inherit;font-size:17px;font-weight:500;padding:10px 12px;border:1.5px solid transparent;border-radius:12px;background:var(--bg);color:var(--ink);margin-bottom:8px}
+.stock{margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.two{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-top:10px}
+.sec{margin-top:0;padding:11px;font-size:15px;background:var(--bg);color:var(--ink)}
+.mi{padding:12px 0;border-bottom:1px solid var(--line)}.mi:last-child{border-bottom:0}
+.mh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.mh b{font-size:17px}
+.mini{width:auto;padding:7px 14px;font-size:14px}
+.mr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+textarea{width:100%;font:inherit;font-size:15px;padding:10px 12px;border:1.5px solid transparent;border-radius:12px;background:var(--bg);color:var(--ink);resize:vertical}
+textarea:focus{outline:none;border-color:var(--down)}
+.empty{font-size:14px;color:var(--sub);padding:6px 0}
+.tri{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:8px}
+.tc{background:var(--bg);border-radius:14px;padding:12px 6px;text-align:center;font-variant-numeric:tabular-nums}
+.tc small{display:block;font-size:12px;color:var(--sub)}
+.tc b{display:block;font-size:18px;margin:3px 0}
+.tc span{font-size:11.5px;color:var(--sub)}
+.tc.mid{background:var(--bg);box-shadow:inset 0 0 0 2px var(--brown)}
+.tc b{font-weight:800}.tc.u b,.tc.u small{color:var(--up)}.tc.mid b,.tc.mid small{color:var(--brown)}.tc.d b,.tc.d small{color:var(--down)}.tc.d b{font-weight:900}
+.pr.u{color:var(--up)}.pr.c{color:var(--brown)}.pr.d{color:var(--down);font-weight:900}
+.r.mid{background:var(--bg);border-radius:10px}
+.tg{display:block;font-style:normal;font-size:12px;color:var(--sub);margin-top:1px}
+.tg.u{color:var(--up);font-weight:700}.tg.c{color:var(--brown);font-weight:700}.tg.d{color:var(--down);font-weight:900}
+.note{font-size:12px;color:var(--sub);text-align:center;margin:0}
+</style>
+</head>
+<body>
+<main>
+<header class="hero">
+  <div class="brand"><svg viewBox="0 0 48 48" width="46" height="46" aria-hidden="true"><path d="M24 8c0-5 4-8 9-7c0 5-4 8-9 7z" fill="#34c759"/><path d="M24 8c0-4-3-7-8-6c0 4 3 7 8 6z" fill="#5ee07a"/><circle cx="24" cy="27" r="18" fill="#ffd54a" stroke="#f2b01e" stroke-width="3"/><circle cx="17.5" cy="26" r="2.6" fill="#0f1e3d"/><circle cx="30.5" cy="26" r="2.6" fill="#0f1e3d"/><circle cx="13" cy="31" r="3" fill="#ff8fa3" opacity=".75"/><circle cx="35" cy="31" r="3" fill="#ff8fa3" opacity=".75"/><path d="M19.5 32q4.5 4.5 9 0" fill="none" stroke="#0f1e3d" stroke-width="2.4" stroke-linecap="round"/></svg><span>주가 계산기</span></div>
+  <small>전일 종가</small>
+  <div class="big" id="close">-</div>
+  <div class="chips" id="chips"></div>
+</header>
+<section class="card">
+  <div class="stock">
+    <label for="sel">종목</label>
+    <select id="sel"></select>
+    <input id="name" type="text" placeholder="종목명 (예: GS피앤엘)" maxlength="30">
+    <div class="two"><button id="save" class="sec" type="button">이 PER 범위 저장</button><button id="del" class="sec" type="button">삭제</button></div>
+    <p class="note" id="msg" style="text-align:left;margin-top:8px">종목을 고르면 시작 PER, 끝 PER, 단계 수를 불러와요</p>
+  </div>
+  <div class="grid">
+    <div><label for="base">전일 EPS (원)</label><input id="base" type="number" inputmode="decimal" value="22292"></div>
+    <div><label for="per">전일 PER</label><input id="per" type="number" inputmode="decimal" step="0.01" value="8.88"></div>
+    <div><label for="cur">전일 종가 (원)</label><input id="cur" type="number" inputmode="numeric" value="189000"></div>
+    <div><label for="n">단계 수</label><input id="n" type="number" inputmode="numeric" min="2" max="30" value="9"></div>
+    <div><label for="lo">시작 PER (1번)</label><input id="lo" type="number" inputmode="decimal" step="0.01" value="5.26"></div>
+    <div><label for="hi">끝 PER</label><input id="hi" type="number" inputmode="decimal" step="0.01" value="11.31"></div>
+  </div>
+  <button id="go" type="button">재계산</button>
+</section>
+<section class="card">
+  <h2>중심 · 상단 · 하단 가격 (전일 PER 기준)</h2>
+  <div class="tri" id="tri"></div>
+</section>
+<section class="card">
+  <h2>PER 단계별 주가</h2>
+  <ul id="rows"></ul>
+</section>
+<section class="card">
+  <h2>종목 메모장</h2>
+  <ul id="memo"></ul>
+</section>
+<p class="note">주가 = PER × 전일 EPS · 100원 단위 반올림 · 값을 고친 뒤 재계산을 누르세요 · 입력값은 이 기기에 저장돼요</p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const IDS=["base","per","cur","n","lo","hi"];
+const fmt=x=>x.toLocaleString("ko-KR");
+try{const s=JSON.parse(localStorage.getItem("stockcalc")||"{}");IDS.forEach(k=>{if(s[k]!==undefined&&s[k]!=="")$(k).value=s[k]})}catch(e){}
+function calc(){
+  const g=id=>parseFloat($(id).value);
+  const base=g("base"),per=g("per"),lo=g("lo"),hi=g("hi"),cur=g("cur");
+  const n=Math.max(2,Math.min(30,parseInt($("n").value)||2));
+  try{const o={};IDS.forEach(k=>o[k]=$(k).value);localStorage.setItem("stockcalc",JSON.stringify(o))}catch(e){}
+  $("close").innerHTML=cur>0?fmt(cur)+"<span>원</span>":"-";
+  $("chips").innerHTML=(per>0?'<span class="chip">전일 PER<b>'+per.toFixed(2)+"</b></span>":"")+(cur>0&&base>0?'<span class="chip">종가 기준 PER<b>'+(cur/base).toFixed(2)+"</b></span>":"")+(base>0?'<span class="chip">EPS<b>'+fmt(base)+"</b></span>":"");
+  const ul=$("rows");ul.innerHTML="";
+  if(!(base>0)||isNaN(lo)||isNaN(hi)){$("tri").innerHTML="";return}
+  const step=(hi-lo)/(n-1),list=[];
+  for(let i=0;i<n;i++){const v=lo+step*i;list.push({i:i+1,v,p:Math.round(v*base/100)*100})}
+  const mn=Math.min(...list.map(r=>r.p)),mx=Math.max(...list.map(r=>r.p));
+  const w=p=>mx===mn?100:25+75*(p-mn)/(mx-mn);
+  const ref=per>0?per:(cur>0?cur/base:NaN);
+  let mi=-1;if(!isNaN(ref)){let bd=Infinity;list.forEach((r,k)=>{const d=Math.abs(r.v-ref);if(d<bd){bd=d;mi=k}})}
+  const cell=(lab,r,cls)=>{let sub="";if(r){sub="PER "+r.v.toFixed(2);if(cur>0){const d=(r.p/cur-1)*100;sub+=" · "+(d>0?"+":"")+d.toFixed(1)+"%"}}return '<div class="tc '+cls+'"><small>'+lab+'</small><b>'+(r?fmt(r.p):"-")+"</b><span>"+sub+"</span></div>"};
+  $("tri").innerHTML=mi<0?"":cell("상단 가격",list[mi+1],"u")+cell("중심 가격",list[mi],"mid")+cell("하단 가격",list[mi-1],"d");
+  const mark='<li class="mark">전일 종가<b>'+fmt(cur)+"</b></li>";
+  let html="",placed=false;
+  const tag=k=>mi<0?"":k===mi?'<i class="tg c">중심 가격</i>':k===mi+1?'<i class="tg u">상단 가격</i>':k===mi-1?'<i class="tg d">하단 가격</i>':"";
+  const pc=k=>mi<0?"":k===mi?" c":k===mi+1?" u":k===mi-1?" d":"";
+  list.slice().reverse().forEach(r=>{
+    if(cur>0&&!placed&&r.p<=cur){html+=mark;placed=true}
+    let df="";
+    if(cur>0){const d=(r.p/cur-1)*100;df='<span class="df '+(d>0?"up":d<0?"down":"")+'">'+(d>0?"+":"")+d.toFixed(1)+"%</span>"}else df="<span></span>";
+    html+='<li class="r'+(mi>=0&&r===list[mi]?" mid":"")+'"><span class="no">'+r.i+'</span><span class="per">PER '+r.v.toFixed(2)+tag(r.i-1)+'</span><span class="pr'+pc(r.i-1)+'">'+fmt(r.p)+"</span>"+df+'<div class="bar" style="width:'+w(r.p)+'%"></div></li>';
+  });
+  if(cur>0&&!placed)html+=mark;
+  ul.innerHTML=html;
+}
+let stocks=Object.create(null);
+try{Object.assign(stocks,JSON.parse(localStorage.getItem("stockcalc_stocks")||"{}"))}catch(e){}
+function renderMemo(){const ul=$("memo");ul.innerHTML="";const ks=Object.keys(stocks);if(!ks.length){const li=document.createElement("li");li.className="empty";li.textContent="저장한 종목이 아직 없어요. 위에서 종목명과 PER 범위를 입력하고 저장해 보세요.";ul.appendChild(li);return}
+ks.forEach(k=>{const s=stocks[k];const li=document.createElement("li");li.className="mi";
+const h=document.createElement("div");h.className="mh";const t=document.createElement("b");t.textContent=k;
+const b=document.createElement("button");b.type="button";b.className="sec mini";b.textContent="계산기에 불러오기";
+b.addEventListener("click",()=>{$("sel").value=k;$("sel").dispatchEvent(new Event("change"));window.scrollTo({top:0,behavior:"smooth"})});
+h.append(t,b);
+const row=document.createElement("div");row.className="mr";
+const mk=(lab,key)=>{const w=document.createElement("label");w.textContent=lab;const i=document.createElement("input");i.type="number";i.inputMode="decimal";i.step="0.01";i.value=s[key];i.addEventListener("change",()=>{const v=parseFloat(i.value);if(!isNaN(v)){s[key]=v;persist()}});w.appendChild(i);return w};
+row.append(mk("시작 PER","lo"),mk("끝 PER","hi"));
+const ta=document.createElement("textarea");ta.placeholder="메모 (예: 작년 저점 PER, 매수 기준 등)";ta.rows=2;ta.maxLength=500;ta.value=s.memo||"";
+ta.addEventListener("input",()=>{s.memo=ta.value;persist()});
+li.append(h,row,ta);ul.appendChild(li)})}
+function persist(){try{localStorage.setItem("stockcalc_stocks",JSON.stringify(stocks))}catch(e){}}
+function remember(n){try{n?localStorage.setItem("stockcalc_sel",n):localStorage.removeItem("stockcalc_sel")}catch(e){}}
+function fillSel(sel){const s=$("sel");s.innerHTML="";const o=document.createElement("option");o.value="";o.textContent="직접 입력";s.appendChild(o);Object.keys(stocks).forEach(k=>{const p=document.createElement("option");p.value=k;p.textContent=k;s.appendChild(p)});s.value=stocks[sel]?sel:"";renderMemo()}
+$("sel").addEventListener("change",()=>{const k=$("sel").value;remember(k);if(!k){$("msg").textContent="직접 입력 중이에요";return}const s=stocks[k];$("name").value=k;$("lo").value=s.lo;$("hi").value=s.hi;$("n").value=s.n;$("msg").textContent=k+" PER 범위를 불러왔어요";calc()});
+$("save").addEventListener("click",()=>{const k=$("name").value.trim(),lo=parseFloat($("lo").value),hi=parseFloat($("hi").value),st=parseInt($("n").value)||9;if(!k){$("msg").textContent="종목명을 먼저 입력해 주세요";return}if(isNaN(lo)||isNaN(hi)){$("msg").textContent="시작 PER과 끝 PER을 입력해 주세요";return}stocks[k]={lo:lo,hi:hi,n:st,memo:(stocks[k]&&stocks[k].memo)||""};persist();remember(k);fillSel(k);$("msg").textContent=k+" 저장했어요 (시작 "+lo+" · 끝 "+hi+" · "+st+"단계)";calc()});
+$("del").addEventListener("click",()=>{const k=$("sel").value;if(!k){$("msg").textContent="삭제할 종목을 먼저 골라 주세요";return}delete stocks[k];persist();remember("");fillSel("");$("name").value="";$("msg").textContent=k+" 삭제했어요"});
+{let last="";try{last=localStorage.getItem("stockcalc_sel")||""}catch(e){}fillSel(last);if(stocks[last])$("name").value=last}
+$("go").addEventListener("click",calc);IDS.forEach(id=>$(id).addEventListener("keydown",e=>{if(e.key==="Enter"){e.target.blur();calc()}}));
+calc();
+</script>
+</body>
+</html>
